@@ -38,6 +38,14 @@ const AcctForm = ({ errors, touched, values, status }) => {
                 </label>
                 <button type="submit">Submit</button>
             </Form>
+
+            {person.map(persons =>(
+                <ul key={person.id}>
+                    <li>Name:{persons.name}</li>
+                    <li>Email:{persons.email} </li>
+                    <li>Password:{persons.password}</li>
+                </ul>
+            ))}
         </div>
         )
 };
