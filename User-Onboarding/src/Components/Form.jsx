@@ -4,10 +4,12 @@ import { Form, Field, withFormik } from "formik";
 import * as Yup from "yup";
 
 const AcctForm = ({ errors, touched, values, status }) => {
-    const [person, setPerson] = useState([status]);
+    const [users, setUsers] = useState([]);
+    
     useEffect(() => {
         if (status) {
-            setPerson([status]);
+            setUsers([status]);
+            
         }
     }, [status]);
 
@@ -39,11 +41,13 @@ const AcctForm = ({ errors, touched, values, status }) => {
                 <button type="submit">Submit</button>
             </Form>
 
-            {person.map(persons =>(
-                <ul key={person.id}>
-                    <li>Name:{persons.name}</li>
-                    <li>Email:{persons.email} </li>
-                    <li>Password:{persons.password}</li>
+            {users.map(users =>(
+                
+                <ul key={users.id}>
+                    
+                    <li>Name:{users.name}</li>
+                    <li>Email:{users.email} </li>
+                    <li>Password:{users.password}</li>
                 </ul>
             ))}
         </div>
@@ -54,18 +58,31 @@ const FormikForm = withFormik({
     mapPropsToValues({name, email, password, tos}) {
         return {
             names: name || '',
-            email: email ||'',
+            email: email || '',
             password: password || '',
-            tos: tos ||false,
+            tos: tos || false,
         }
-    }
-})
+    },
 
 validationSchema: Yup.object().shape({
     name: Yup.string().required("Name Required"),
-    email: Yup.email().required(),
-    password: Yup.string.min( 8 | `${min}` | function )
-})
+    email: Yup.string().required(),
+    password: Yup.string().required().min( 8, "8 characters minimum"),
+    
+}),
+
+handleSubmit(values, { setStatus }) {
+    axios
+        .post("https://reqres.in/api/users", values)
+        .then(res => {
+            setStatus(res.data);
+            console.log(res);
+        })
+        .catch(err => console.log(err.response)); 
+}
+})(AcctForm);
+
+// const higherOrderComponent(this-one-houses-function)(this-one-houses-component);
 
 
-export default AcctForm;
+export default FormikForm;
