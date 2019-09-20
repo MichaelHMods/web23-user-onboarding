@@ -51,11 +51,20 @@ const AcctForm = ({ errors, touched, values, status }) => {
 };
 
 const FormikForm = withFormik({
-    mapPropsToValues({}) {
+    mapPropsToValues({name, email, password, tos}) {
         return {
-            names: name 
+            names: name || '',
+            email: email ||'',
+            password: password || '',
+            tos: tos ||false,
         }
     }
+})
+
+validationSchema: Yup.object().shape({
+    name: Yup.string().required("Name Required"),
+    email: Yup.email().required(),
+    password: Yup.string.min( 8 | `${min}` | function )
 })
 
 
