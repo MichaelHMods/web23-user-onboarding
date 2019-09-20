@@ -8,9 +8,9 @@ const AcctForm = ({ errors, touched, values, status }) => {
     
     useEffect(() => {
         if (status) {
-            setUsers([status]);
-            
+            setUsers([...users, status]);
         }
+        
     }, [status]);
 
     return (
@@ -25,7 +25,7 @@ const AcctForm = ({ errors, touched, values, status }) => {
                 {touched.email && errors.email && (
                     <p className="error">{errors.email} </p>
                 )} 
-                <Field type='text' name='password' placeholder="password"/>
+                <Field type='password' name='password' placeholder="password"/>
                 {touched.password && errors.password && (
                     <p className="error">{errors.password} </p>
                 )}
@@ -71,14 +71,16 @@ validationSchema: Yup.object().shape({
     
 }),
 
-handleSubmit(values, { setStatus }) {
+handleSubmit(values, { resetForm, setStatus }) {
     axios
         .post("https://reqres.in/api/users", values)
         .then(res => {
             setStatus(res.data);
             console.log(res);
         })
-        .catch(err => console.log(err.response)); 
+        .catch(err => console.log(err.response));
+        resetForm({ name: "", email:"", password: "" }); 
+        
 }
 })(AcctForm);
 
